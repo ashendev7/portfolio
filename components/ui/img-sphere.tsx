@@ -46,6 +46,7 @@ export interface SphereImageGridProps {
   autoRotate?: boolean;
   autoRotateSpeed?: number;
   className?: string;
+  inView?: boolean;
 }
 
 interface RotationState {
@@ -100,7 +101,8 @@ const SphereImageGrid: React.FC<SphereImageGridProps> = ({
   perspective = 1000,
   autoRotate = false,
   autoRotateSpeed = 0.3,
-  className = ''
+  className = '',
+  inView = true
 }) => {
 
   const [isMounted, setIsMounted] = useState<boolean>(false);
@@ -375,8 +377,13 @@ const SphereImageGrid: React.FC<SphereImageGridProps> = ({
       animationFrame.current = requestAnimationFrame(animate);
     };
 
-    if (isMounted) {
+    if (isMounted && inView) {
       animationFrame.current = requestAnimationFrame(animate);
+    } else {
+      if (animationFrame.current) {
+        cancelAnimationFrame(animationFrame.current);
+        animationFrame.current = null;
+      }
     }
 
     return () => {
@@ -384,10 +391,10 @@ const SphereImageGrid: React.FC<SphereImageGridProps> = ({
         cancelAnimationFrame(animationFrame.current);
       }
     };
-  }, [isMounted, updateMomentum]);
+  }, [isMounted, updateMomentum, inView]);
 
   useEffect(() => {
-    if (!isMounted) return;
+    if (!isMounted || !inView) return;
 
     const container = containerRef.current;
     if (!container) return;
@@ -404,7 +411,7 @@ const SphereImageGrid: React.FC<SphereImageGridProps> = ({
       document.removeEventListener('touchmove', handleTouchMove);
       document.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [isMounted, handleMouseMove, handleMouseUp, handleTouchMove, handleTouchEnd]);
+  }, [isMounted, inView, handleMouseMove, handleMouseUp, handleTouchMove, handleTouchEnd]);
 
   const worldPositions = calculateWorldPositions();
 

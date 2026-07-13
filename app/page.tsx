@@ -192,11 +192,43 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const typewriterRef = useRef(null)
 
+  const heroRef = useRef<HTMLDivElement>(null)
+  const skillsRef = useRef<HTMLDivElement>(null)
+  const [heroInView, setHeroInView] = useState(true)
+  const [skillsInView, setSkillsInView] = useState(false)
+
   const scrollRef = useRef<HTMLDivElement>(null)
   const isDownRef = useRef(false)
   const startXRef = useRef(0)
   const scrollLeftRef = useRef(0)
   const isHoveredRef = useRef(false)
+
+  useEffect(() => {
+    const heroEl = heroRef.current
+    const skillsEl = skillsRef.current
+
+    const observerOptions = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.05,
+    }
+
+    const heroObserver = new IntersectionObserver(([entry]) => {
+      setHeroInView(entry.isIntersecting)
+    }, observerOptions)
+
+    const skillsObserver = new IntersectionObserver(([entry]) => {
+      setSkillsInView(entry.isIntersecting)
+    }, observerOptions)
+
+    if (heroEl) heroObserver.observe(heroEl)
+    if (skillsEl) skillsObserver.observe(skillsEl)
+
+    return () => {
+      if (heroEl) heroObserver.unobserve(heroEl)
+      if (skillsEl) skillsObserver.unobserve(skillsEl)
+    }
+  }, [])
 
   useEffect(() => {
     const container = scrollRef.current
@@ -388,7 +420,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen text-slate-100 flex flex-col relative select-none bg-transparent">
+    <div className="min-h-screen text-slate-100 flex flex-col relative bg-transparent">
 
       {/* Three.js Dotted Surface background */}
       <DottedSurface />
@@ -402,7 +434,7 @@ export default function Home() {
 
       {/* Floating Pill Navbar */}
       <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[98%] max-w-7xl">
-        <header className="w-full px-8 py-3.5 flex justify-between items-center backdrop-blur-2xl bg-black/70 border border-zinc-800/80 hover:border-zinc-700/60 rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,0.8),0_0_20px_rgba(6,182,212,0.04)] transition-all duration-300">
+        <header className="w-full px-6 md:px-12 py-3.5 flex justify-between items-center backdrop-blur-2xl bg-black/70 border border-zinc-800/80 hover:border-zinc-700/60 rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,0.8),0_0_20px_rgba(6,182,212,0.04)] transition-all duration-300">
           <a href="#" className="flex items-center gap-2.5 font-bold text-lg tracking-widest text-white hover:opacity-95 transition-opacity">
             <Sparkles className="w-5 h-5 text-cyan-400 animate-pulse" />
             <span>ASHEN<span className="text-cyan-400">DEV</span></span>
@@ -487,13 +519,13 @@ export default function Home() {
         )}
       </div>
 
-      {/* Hero Section */}
       <motion.section
+        ref={heroRef}
         id="hero"
         initial="hidden"
         animate="visible"
         variants={fadeInUpVariants}
-        className="relative w-full px-6 md:pl-36 lg:pl-44 md:pr-12 pt-16 pb-10 flex flex-col-reverse md:flex-row items-center justify-between gap-12 z-10 overflow-hidden"
+        className="relative w-full max-w-7xl mx-auto px-6 md:px-12 pt-28 md:pt-36 pb-12 md:pb-20 flex flex-col-reverse md:flex-row items-center justify-between gap-12 z-10 overflow-hidden"
       >
         {/* Cyber Cyan Spotlight background effect */}
         <Spotlight className="-top-40 left-0 md:left-60 md:-top-20" fill="#06b6d4" />
@@ -509,9 +541,9 @@ export default function Home() {
           </div> */}
 
 
-          <h1 className="text-5xl md:text-6xl font-black leading-tight tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-white via-slate-100 to-slate-400">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black leading-tight tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-white via-slate-100 to-slate-400">
             I'm a{" "}
-            <span className="bg-gradient-to-r from-cyan-400 via-teal-400 to-emerald-400 bg-clip-text text-transparent block md:inline-block">
+            <span className="bg-gradient-to-r from-cyan-400 via-teal-400 to-emerald-400 bg-clip-text text-transparent block md:inline-block min-h-[2.5em] md:min-h-[1.25em]">
               <Typewriter ref={typewriterRef} words={['Software Engineer', 'Full-Stack Developer', 'Creative Developer', 'Problem Solver']} typeSpeed={120} deleteSpeed={60} />
             </span>
           </h1>
@@ -552,6 +584,7 @@ export default function Home() {
           <SplineScene
             scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
             className="w-full h-full"
+            inView={heroInView}
           />
           {/* Smooth bottom fade-out overlay to prevent harsh cutoff */}
           <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black via-black/30 to-transparent pointer-events-none z-10" />
@@ -567,7 +600,7 @@ export default function Home() {
         whileInView="visible"
         viewport={{ once: true, margin: "-50px" }}
         variants={fadeInUpVariants}
-        className="relative w-full max-w-7xl mx-auto px-6 pt-10 pb-12 z-10 overflow-hidden scroll-mt-28"
+        className="relative w-full max-w-7xl mx-auto px-6 md:px-12 pt-10 pb-12 z-10 overflow-hidden scroll-mt-28"
       >
         {/* Cyber Emerald Spotlight background effect */}
         {/* <Spotlight className="-top-20 left-1/3 md:left-1/2" fill="#10b981" /> */}
@@ -722,7 +755,7 @@ export default function Home() {
         whileInView="visible"
         viewport={{ once: true, margin: "-50px" }}
         variants={fadeInUpVariants}
-        className="relative w-full max-w-7xl mx-auto px-6 pt-12 pb-12 z-10 scroll-mt-28"
+        className="relative w-full max-w-7xl mx-auto px-6 md:px-12 pt-12 pb-12 z-10 scroll-mt-28"
       >
         <div className="flex flex-col items-center justify-center text-center space-y-4 mb-12 relative z-10">
           <h2 className="text-xs uppercase tracking-widest text-teal-400 font-semibold font-mono">Services</h2>
@@ -746,12 +779,13 @@ export default function Home() {
 
             {/* Skills / Technologies Section */}
       <motion.section
+        ref={skillsRef}
         id="skills"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-50px" }}
         variants={fadeInUpVariants}
-        className="relative w-full max-w-7xl mx-auto px-6 pt-12 pb-12 z-10 overflow-hidden scroll-mt-28"
+        className="relative w-full max-w-7xl mx-auto px-6 md:px-12 pt-12 pb-12 z-10 overflow-hidden scroll-mt-28"
       >
         <div className="flex flex-col items-center justify-center text-center space-y-4 mb-12 relative z-10">
           <h2 className="text-xs uppercase tracking-widest text-cyan-400 font-semibold font-mono">Technologies</h2>
@@ -775,6 +809,7 @@ export default function Home() {
                   autoRotateSpeed={0.25}
                   dragSensitivity={0.7}
                   baseImageScale={0.16}
+                  inView={skillsInView}
                 />
               </div>
             </div>
@@ -834,7 +869,7 @@ export default function Home() {
         whileInView="visible"
         viewport={{ once: true, margin: "-150px" }}
         variants={fadeInUpVariants}
-        className="w-full max-w-7xl mx-auto px-6 pt-12 pb-12 z-10 scroll-mt-28"
+        className="w-full max-w-7xl mx-auto px-6 md:px-12 pt-12 pb-12 z-10 scroll-mt-28"
       >
         <div className="flex flex-col items-center justify-center text-center space-y-4 mb-8">
           <h2 className="text-xs uppercase tracking-widest text-emerald-400 font-semibold font-mono">Recent Work</h2>
@@ -909,75 +944,95 @@ export default function Home() {
         whileInView="visible"
         viewport={{ once: true, margin: "-150px" }}
         variants={fadeInUpVariants}
-        className="w-full max-w-4xl mx-auto px-6 pt-12 pb-28 z-10 scroll-mt-28"
+        className="w-full max-w-4xl mx-auto px-6 md:px-12 pt-12 pb-28 z-10 scroll-mt-28"
       >
-        <Card className="relative overflow-hidden border-zinc-800 bg-zinc-950/70 backdrop-blur-xl p-8 md:p-12">
+        <Card className="relative overflow-hidden border-zinc-805 bg-zinc-950/70 backdrop-blur-xl p-6 md:p-12 rounded-2xl">
           {/* Spotlight background */}
           <Spotlight className="-top-40 right-0" fill="#10b981" />
 
           <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-10">
-            <div className="flex flex-col justify-center space-y-4">
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">Let's Connect</h2>
+            <div className="flex flex-col justify-center space-y-5">
+              <h2 className="text-3xl font-black bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-300 bg-clip-text text-transparent">Let's Connect</h2>
               <p className="text-gray-400 text-sm leading-relaxed font-medium">
                 Have a project in mind or just want to say hi? Let’s build something awesome together. Fill out the contact form or connect via details below.
               </p>
-              <div className="space-y-4 pt-4 text-sm text-gray-300">
-                <a href="mailto:contact@ashendev.com" className="flex items-center gap-3 hover:text-emerald-400 transition-colors">
-                  <Mail className="w-5 h-5 text-emerald-400" />
-                  <span>contact@ashendev.com</span>
+              
+              <div className="space-y-3 pt-4 text-sm text-gray-300">
+                <a href="mailto:contact@ashendev.com" className="flex items-center gap-3.5 group hover:text-emerald-400 transition-colors py-2.5 px-3.5 -mx-3.5 rounded-xl hover:bg-zinc-900/30 border border-transparent hover:border-zinc-800/40">
+                  <div className="p-2 rounded-lg bg-emerald-950/40 border border-emerald-800/30 group-hover:border-emerald-500/30 transition-colors">
+                    <Mail className="w-4 h-4 text-emerald-400" />
+                  </div>
+                  <span className="font-medium">contact@ashendev.com</span>
                 </a>
-                <a href="tel:+94763188418" className="flex items-center gap-3 hover:text-emerald-400 transition-colors">
-                  <Phone className="w-5 h-5 text-cyan-400" />
-                  <span>+94 76 318 8418</span>
+                <a href="tel:+94763188418" className="flex items-center gap-3.5 group hover:text-cyan-400 transition-colors py-2.5 px-3.5 -mx-3.5 rounded-xl hover:bg-zinc-900/30 border border-transparent hover:border-zinc-800/40">
+                  <div className="p-2 rounded-lg bg-cyan-950/40 border border-cyan-800/30 group-hover:border-cyan-500/30 transition-colors">
+                    <Phone className="w-4 h-4 text-cyan-400" />
+                  </div>
+                  <span className="font-medium">+94 76 318 8418</span>
                 </a>
-                <div className="flex items-center gap-3">
-                  <MapPin className="w-5 h-5 text-sky-400" />
-                  <span>Ja Ela, Sri Lanka</span>
+                <div className="flex items-center gap-3.5 py-2.5 px-3.5 -mx-3.5 rounded-xl">
+                  <div className="p-2 rounded-lg bg-sky-950/40 border border-sky-800/30">
+                    <MapPin className="w-4 h-4 text-sky-400" />
+                  </div>
+                  <span className="font-medium">Ja Ela, Sri Lanka</span>
                 </div>
               </div>
             </div>
 
             <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Name</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2 font-mono">Name</label>
                 <input
                   type="text"
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full bg-zinc-900/40 border border-zinc-800 rounded-lg px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-emerald-500 transition-colors"
+                  className="w-full bg-zinc-900/40 hover:bg-zinc-900/60 border border-zinc-800 hover:border-zinc-700 rounded-xl px-4 py-3 text-sm text-slate-100 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 transition-all duration-200"
                   placeholder="Your Name"
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Email</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2 font-mono">Email</label>
                 <input
                   type="email"
                   required
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full bg-zinc-900/40 border border-zinc-800 rounded-lg px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-emerald-500 transition-colors"
+                  className="w-full bg-zinc-900/40 hover:bg-zinc-900/60 border border-zinc-800 hover:border-zinc-700 rounded-xl px-4 py-3 text-sm text-slate-100 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 transition-all duration-200"
                   placeholder="your@email.com"
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Message</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-400 mb-2 font-mono">Message</label>
                 <textarea
                   rows={4}
                   required
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  className="w-full bg-zinc-900/40 border border-zinc-800 rounded-lg px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-emerald-500 transition-colors resize-none"
+                  className="w-full bg-zinc-900/40 hover:bg-zinc-900/60 border border-zinc-800 hover:border-zinc-700 rounded-xl px-4 py-3 text-sm text-slate-100 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 transition-all duration-200 resize-none"
                   placeholder="Your message details..."
                 />
               </div>
               <button
                 type="submit"
                 disabled={formSubmitted}
-                className="w-full py-3.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-800/40 text-black font-semibold text-sm tracking-wide transition-all shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2"
+                className={`w-full py-3.5 rounded-xl font-bold text-sm tracking-wide transition-all duration-300 flex items-center justify-center gap-2 hover:scale-[1.01] active:scale-[0.99] cursor-pointer ${
+                  formSubmitted
+                    ? "bg-emerald-950/80 border border-emerald-500/30 text-emerald-400 shadow-lg shadow-emerald-500/10"
+                    : "bg-gradient-to-r from-cyan-500 to-emerald-500 text-black shadow-lg shadow-cyan-500/15 hover:shadow-cyan-500/25"
+                }`}
               >
-                {formSubmitted ? "Sent Successfully!" : "Send Message"}
-                <Send className="w-4 h-4" />
+                {formSubmitted ? (
+                  <>
+                    <span>Sent Successfully!</span>
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  </>
+                ) : (
+                  <>
+                    <span>Send Message</span>
+                    <Send className="w-4 h-4" />
+                  </>
+                )}
               </button>
             </form>
           </div>
