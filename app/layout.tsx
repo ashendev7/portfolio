@@ -17,6 +17,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Ashen De Silva | Creative Full-Stack Developer",
   description: "I’m Ashen De Silva — a creative full-stack developer who blends design and technology to build stunning web, mobile, and brand experiences. Explore my portfolio built with Next.js, Tailwind, and Framer Motion.",
+  icons: {
+    icon: "/logo.jpg",
+  },
 };
 
 export default function RootLayout({

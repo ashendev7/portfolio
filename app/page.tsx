@@ -2,14 +2,12 @@
 
 import React, { useState, useRef, useEffect } from "react"
 import { Typewriter } from "@/components/ui/typewriter"
-import { SplineScene } from "@/components/ui/splite"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Spotlight } from "@/components/ui/spotlight"
 import { SpotlightHover } from "@/components/ui/spotlight-hover"
-import { SplineSceneBasic } from "@/components/ui/demo"
-import { DottedSurface } from "@/components/ui/dotted-surface"
 import SphereImageGrid from "@/components/ui/img-sphere"
 import { motion } from "framer-motion"
+import dynamic from "next/dynamic"
 import {
   Mail,
   ArrowRight,
@@ -17,18 +15,25 @@ import {
   Cpu,
   Code2,
   Sparkles,
-  Briefcase,
   Send,
-  Layers,
   MonitorSmartphone,
   Phone,
   MapPin,
   Globe,
   Palette,
   Terminal,
-  Zap,
-  CheckCircle2
+  Zap
 } from "lucide-react"
+
+// Dynamically load heavy 3D/canvas components to optimize bundle size & load speed
+const SplineScene = dynamic(() => import("@/components/ui/splite").then(mod => mod.SplineScene), {
+  ssr: false,
+  loading: () => <div className="w-full h-full bg-zinc-950/20 animate-pulse rounded-2xl" />
+})
+
+const DottedSurface = dynamic(() => import("@/components/ui/dotted-surface").then(mod => mod.DottedSurface), {
+  ssr: false
+})
 
 // Custom Feather/Lucide-style Github icon
 const GithubIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -273,7 +278,6 @@ export default function Home() {
   const navItems = [
     { name: "About", href: "#about" },
     { name: "Services", href: "#services" },
-    { name: "Demo", href: "#featured" },
     { name: "Work", href: "#work" },
     { name: "Skills", href: "#skills" },
     { name: "Contact", href: "#contact" }
@@ -289,6 +293,14 @@ export default function Home() {
   }
 
   const projects = [
+    {
+      title: "Travique - Premium Travel & Tours",
+      description: "Experience Sri Lanka with our premium transportation and tour services. Reliable, safe, and comfortable journeys tailored to your needs.",
+      image: "/Travique.png",
+      tags: ["Next.js", "Tailwind CSS", "Framer Motion", "TypeScript"],
+      category: "web",
+      link: "https://krish-travel.vercel.app/"
+    },
     {
       title: "E-Commerce Platform",
       description: "Modern online store with seamless checkout experience.",
@@ -420,10 +432,10 @@ export default function Home() {
 
           <div className="flex gap-4 items-center">
             <div className="hidden sm:flex gap-2.5 items-center">
-              <a href="https://github.com" target="_blank" className="p-1.5 text-gray-400 hover:text-white transition-colors">
+              <a href="https://github.com/ashendev7" target="_blank" rel="noreferrer" className="p-1.5 text-gray-400 hover:text-white transition-colors">
                 <GithubIcon className="w-4 h-4" />
               </a>
-              <a href="https://linkedin.com" target="_blank" className="p-1.5 text-gray-400 hover:text-white transition-colors">
+              <a href="https://www.linkedin.com/in/ashen-de-silva-8b4a30334/" target="_blank" rel="noreferrer" className="p-1.5 text-gray-400 hover:text-white transition-colors">
                 <LinkedinIcon className="w-4 h-4" />
               </a>
             </div>
@@ -464,10 +476,10 @@ export default function Home() {
               </a>
             ))}
             <div className="flex gap-4 px-4 pt-2 border-t border-zinc-900 justify-start">
-              <a href="https://github.com" target="_blank" className="text-gray-400 hover:text-white transition-colors">
+              <a href="https://github.com/ashendev7" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition-colors">
                 <GithubIcon className="w-5 h-5" />
               </a>
-              <a href="https://linkedin.com" target="_blank" className="text-gray-400 hover:text-white transition-colors">
+              <a href="https://www.linkedin.com/in/ashen-de-silva-8b4a30334/" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition-colors">
                 <LinkedinIcon className="w-5 h-5" />
               </a>
             </div>
@@ -498,10 +510,8 @@ export default function Home() {
 
 
           <h1 className="text-5xl md:text-6xl font-black leading-tight tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-white via-slate-100 to-slate-400">
-            I'm a
-          </h1>
-          <h1 className="text-5xl md:text-5xl font-black leading-tight tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-white via-slate-100 to-slate-400">
-            <span className="bg-gradient-to-r from-cyan-400 via-teal-400 to-emerald-400 bg-clip-text text-transparent inline-block">
+            I'm a{" "}
+            <span className="bg-gradient-to-r from-cyan-400 via-teal-400 to-emerald-400 bg-clip-text text-transparent block md:inline-block">
               <Typewriter ref={typewriterRef} words={['Software Engineer', 'Full-Stack Developer', 'Creative Developer', 'Problem Solver']} typeSpeed={120} deleteSpeed={60} />
             </span>
           </h1>
@@ -557,7 +567,7 @@ export default function Home() {
         whileInView="visible"
         viewport={{ once: true, margin: "-50px" }}
         variants={fadeInUpVariants}
-        className="relative w-full max-w-7xl mx-auto px-6 pt-10 pb-28 z-10 overflow-hidden scroll-mt-28"
+        className="relative w-full max-w-7xl mx-auto px-6 pt-10 pb-12 z-10 overflow-hidden scroll-mt-28"
       >
         {/* Cyber Emerald Spotlight background effect */}
         {/* <Spotlight className="-top-20 left-1/3 md:left-1/2" fill="#10b981" /> */}
@@ -607,6 +617,8 @@ export default function Home() {
                     alt="Ashen De Silva"
                     src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=600&auto=format&fit=crop"
                     className="object-cover w-full h-full rounded-full filter grayscale contrast-125 group-hover:grayscale-0 transition-all duration-500"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
 
@@ -702,6 +714,7 @@ export default function Home() {
         </div>
       </motion.section>
 
+
       {/* Services Section */}
       <motion.section
         id="services"
@@ -709,176 +722,36 @@ export default function Home() {
         whileInView="visible"
         viewport={{ once: true, margin: "-50px" }}
         variants={fadeInUpVariants}
-        className="w-full py-28 z-10 bg-gradient-to-b from-transparent to-zinc-950/10 scroll-mt-28 overflow-hidden"
+        className="relative w-full max-w-7xl mx-auto px-6 pt-12 pb-12 z-10 scroll-mt-28"
       >
-        {/* Self-contained marquee style declaration to prevent CSS cache issues */}
-        <style>{`
-          .services-scroll-container {
-            display: flex;
-            gap: 1.5rem;
-            overflow-x: auto;
-            scroll-behavior: auto;
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
-          }
-          .services-scroll-container::-webkit-scrollbar {
-            display: none; /* Chrome, Safari and Opera */
-          }
-          .marquee-mask {
-            mask-image: linear-gradient(
-              90deg,
-              transparent 0%,
-              black 10%,
-              black 90%,
-              transparent 100%
-            );
-            -webkit-mask-image: linear-gradient(
-              90deg,
-              transparent 0%,
-              black 10%,
-              black 90%,
-              transparent 100%
-            );
-          }
-        `}</style>
-
-        <div className="flex flex-col items-center justify-center text-center space-y-4 mb-16 max-w-7xl mx-auto px-6">
-          <h2 className="text-xs uppercase tracking-widest text-cyan-400 font-semibold font-mono">My Services</h2>
-          <p className="text-3xl font-extrabold text-white">Providing End-to-End Solutions</p>
-          <div className="w-12 h-1 bg-cyan-500 rounded-full" />
+        <div className="flex flex-col items-center justify-center text-center space-y-4 mb-12 relative z-10">
+          <h2 className="text-xs uppercase tracking-widest text-teal-400 font-semibold font-mono">Services</h2>
+          <p className="text-3xl font-extrabold text-white">What I Offer</p>
+          <div className="w-12 h-1 bg-teal-500 rounded-full" />
         </div>
 
-        {/* Horizontal Scroll Layout */}
-        <div className="relative w-full flex items-center justify-center py-4">
-          <div className="marquee-mask w-full">
-            <div
-              ref={scrollRef}
-              className="services-scroll-container px-6 select-none cursor-grab active:cursor-grabbing"
-              onMouseDown={handleMouseDown}
-              onMouseUp={handleMouseUp}
-              onMouseLeave={handleMouseLeave}
-              onMouseMove={handleMouseMove}
-              onMouseEnter={() => { isHoveredRef.current = true; }}
-              onTouchStart={() => { isHoveredRef.current = true; }}
-              onTouchEnd={() => { isHoveredRef.current = false; }}
-            >
-              {[...services, ...services].map((srv, index) => (
-                <div
-                  key={index}
-                  className="flex-shrink-0 w-80 md:w-96 rounded-2xl overflow-hidden group transition-all select-none"
-                >
-                  <Card className="bg-zinc-950/45 border-zinc-900 hover:border-zinc-800/80 p-6 flex flex-col space-y-4 h-[220px] relative overflow-hidden transition-all duration-300 select-none cursor-pointer">
-                    <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-transparent to-emerald-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-                    <div className="p-3 bg-zinc-900 border border-zinc-800 rounded-xl w-fit text-cyan-400 group-hover:text-emerald-400 transition-colors">
-                      {srv.icon}
-                    </div>
-                    <h3 className="font-bold text-lg text-white group-hover:text-cyan-300 transition-colors">{srv.title}</h3>
-                    <p className="text-sm text-gray-400 leading-relaxed">{srv.description}</p>
-                  </Card>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </motion.section>
-
-      {/* Featured Interaction section */}
-      <motion.section
-        id="featured"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-150px" }}
-        variants={fadeInUpVariants}
-        className="w-full max-w-7xl mx-auto px-6 py-28 z-10 scroll-mt-28"
-      >
-        <div className="flex flex-col items-center justify-center text-center space-y-4 mb-12">
-          <h2 className="text-xs uppercase tracking-widest text-cyan-400 font-semibold font-mono">Featured Experience</h2>
-          <p className="text-3xl font-extrabold text-white">Interactive Spline Sandbox</p>
-          <div className="w-12 h-1 bg-cyan-500 rounded-full" />
-        </div>
-
-        <SplineSceneBasic />
-      </motion.section>
-
-      {/* Projects Grid Section (with active category filter) */}
-      <motion.section
-        id="work"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-150px" }}
-        variants={fadeInUpVariants}
-        className="w-full max-w-7xl mx-auto px-6 py-28 z-10 scroll-mt-28"
-      >
-        <div className="flex flex-col items-center justify-center text-center space-y-4 mb-8">
-          <h2 className="text-xs uppercase tracking-widest text-emerald-400 font-semibold font-mono">Recent Work</h2>
-          <p className="text-3xl font-extrabold text-white">Explore My Projects</p>
-          <div className="w-12 h-1 bg-emerald-500 rounded-full" />
-        </div>
-
-        {/* Filter buttons */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
-          {["all", "web", "mobile", "design", "backend"].map((filt) => (
-            <button
-              key={filt}
-              onClick={() => setActiveFilter(filt)}
-              className={`px-5 py-2 rounded-full text-xs font-semibold tracking-wider uppercase transition-all ${activeFilter === filt
-                ? "bg-emerald-600 text-white shadow-lg shadow-emerald-600/20"
-                : "bg-zinc-900 border border-zinc-800 text-gray-400 hover:text-white"
-                }`}
-            >
-              {filt}
-            </button>
-          ))}
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredProjects.map((proj, idx) => (
-            <Card key={idx} className="relative group overflow-hidden border-zinc-900 bg-zinc-950/50 hover:border-zinc-700 flex flex-col h-full">
-              {/* Mouse hover tracking glow effect */}
-              <SpotlightHover size={300} />
-
-              <div className="h-48 w-full overflow-hidden relative border-b border-zinc-900">
-                <img
-                  src={proj.image}
-                  alt={proj.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 to-transparent" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
+          {services.map((service, idx) => (
+            <Card key={idx} className="relative group overflow-hidden border-zinc-900 bg-zinc-950/50 hover:border-zinc-800 flex flex-col h-full p-6 transition-all duration-300 hover:-translate-y-1">
+              <SpotlightHover size={240} className="from-teal-500/10 via-teal-500/5 to-transparent" />
+              <div className="p-4 rounded-xl bg-zinc-900/50 border border-zinc-800/80 w-fit mb-5 group-hover:border-teal-500/30 group-hover:bg-zinc-900 transition-colors">
+                {service.icon}
               </div>
-
-              <CardHeader className="flex-grow p-6">
-                <div className="flex flex-wrap gap-2 mb-3">
-                  {proj.tags.map((tag, tagIdx) => (
-                    <span key={tagIdx} className="text-[10px] bg-zinc-900 text-gray-300 border border-zinc-800 px-2 py-0.5 rounded-md font-mono">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                <CardTitle className="text-xl font-bold group-hover:text-cyan-300 transition-colors">{proj.title}</CardTitle>
-                <CardDescription className="text-sm text-gray-400 mt-2 leading-relaxed">
-                  {proj.description}
-                </CardDescription>
-              </CardHeader>
-
-              <CardFooter className="p-6 pt-0 mt-auto border-t border-zinc-900/40">
-                <a href={proj.link} className="inline-flex items-center gap-1 text-sm text-cyan-400 hover:text-cyan-300 hover:underline transition-colors mt-4">
-                  View Case Study
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
-              </CardFooter>
+              <h3 className="text-xl font-bold text-white mb-3 group-hover:text-teal-400 transition-colors">{service.title}</h3>
+              <p className="text-sm text-gray-400 leading-relaxed">{service.description}</p>
             </Card>
           ))}
         </div>
       </motion.section>
 
-      {/* Skills / Technologies Section */}
+            {/* Skills / Technologies Section */}
       <motion.section
         id="skills"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-50px" }}
         variants={fadeInUpVariants}
-        className="relative w-full max-w-7xl mx-auto px-6 py-28 z-10 overflow-hidden scroll-mt-28"
+        className="relative w-full max-w-7xl mx-auto px-6 pt-12 pb-12 z-10 overflow-hidden scroll-mt-28"
       >
         <div className="flex flex-col items-center justify-center text-center space-y-4 mb-12 relative z-10">
           <h2 className="text-xs uppercase tracking-widest text-cyan-400 font-semibold font-mono">Technologies</h2>
@@ -887,20 +760,24 @@ export default function Home() {
         </div>
 
         <div className="flex flex-col lg:flex-row items-center justify-between gap-12 relative z-10">
-          {/* Left Column: Interactive 3D Sphere of programming language logos */}
-          <div className="flex-1 flex justify-center items-center relative h-[480px] w-full max-w-[480px] mx-auto overflow-hidden">
+          <div className="flex-1 flex justify-center items-center relative h-[360px] min-[400px]:h-[400px] sm:h-[480px] w-full max-w-[480px] mx-auto overflow-hidden">
             {/* Soft backdrop glow behind sphere */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(6,182,212,0.06),transparent_60%)] pointer-events-none" />
-            <SphereImageGrid
-              images={sphereImages}
-              containerSize={460}
-              sphereRadius={175}
-              autoRotate={true}
-              autoRotateSpeed={0.25}
-              dragSensitivity={0.7}
-              baseImageScale={0.16}
-              className="mx-auto"
-            />
+            
+            {/* Center-aligned responsive wrapper for the 3D Sphere */}
+            <div className="relative w-full max-w-[460px] aspect-square mx-auto flex justify-center items-center">
+              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 scale-[0.68] min-[400px]:scale-[0.8] min-[460px]:scale-[0.9] sm:scale-100 origin-center transition-transform">
+                <SphereImageGrid
+                  images={sphereImages}
+                  containerSize={460}
+                  sphereRadius={175}
+                  autoRotate={true}
+                  autoRotateSpeed={0.25}
+                  dragSensitivity={0.7}
+                  baseImageScale={0.16}
+                />
+              </div>
+            </div>
           </div>
 
           {/* Right Column: Categorized list of technologies */}
@@ -950,6 +827,81 @@ export default function Home() {
         </div>
       </motion.section>
 
+      {/* Projects Grid Section (with active category filter) */}
+      <motion.section
+        id="work"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-150px" }}
+        variants={fadeInUpVariants}
+        className="w-full max-w-7xl mx-auto px-6 pt-12 pb-12 z-10 scroll-mt-28"
+      >
+        <div className="flex flex-col items-center justify-center text-center space-y-4 mb-8">
+          <h2 className="text-xs uppercase tracking-widest text-emerald-400 font-semibold font-mono">Recent Work</h2>
+          <p className="text-3xl font-extrabold text-white">Explore My Projects</p>
+          <div className="w-12 h-1 bg-emerald-500 rounded-full" />
+        </div>
+
+        {/* Filter buttons */}
+        <div className="flex flex-wrap justify-center gap-3 mb-12">
+          {["all", "web", "mobile", "design", "backend"].map((filt) => (
+            <button
+              key={filt}
+              onClick={() => setActiveFilter(filt)}
+              className={`px-5 py-2 rounded-full text-xs font-semibold tracking-wider uppercase transition-all ${activeFilter === filt
+                ? "bg-emerald-600 text-white shadow-lg shadow-emerald-600/20"
+                : "bg-zinc-900 border border-zinc-800 text-gray-400 hover:text-white"
+                }`}
+            >
+              {filt}
+            </button>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredProjects.map((proj, idx) => (
+            <Card key={idx} className="relative group overflow-hidden border-zinc-900 bg-zinc-950/50 hover:border-zinc-700 flex flex-col h-full">
+              {/* Mouse hover tracking glow effect */}
+              <SpotlightHover size={300} />
+
+              <div className="h-48 w-full overflow-hidden relative border-b border-zinc-900">
+                  <img
+                    src={proj.image}
+                    alt={proj.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 to-transparent" />
+              </div>
+
+              <CardHeader className="flex-grow p-6">
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {proj.tags.map((tag, tagIdx) => (
+                    <span key={tagIdx} className="text-[10px] bg-zinc-900 text-gray-300 border border-zinc-800 px-2 py-0.5 rounded-md font-mono">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <CardTitle className="text-xl font-bold group-hover:text-cyan-300 transition-colors">{proj.title}</CardTitle>
+                <CardDescription className="text-sm text-gray-400 mt-2 leading-relaxed">
+                  {proj.description}
+                </CardDescription>
+              </CardHeader>
+
+              <CardFooter className="p-6 pt-0 mt-auto border-t border-zinc-900/40">
+                <a href={proj.link} className="inline-flex items-center gap-1 text-sm text-cyan-400 hover:text-cyan-300 hover:underline transition-colors mt-4">
+                  View Case Study
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      </motion.section>
+
+
+
       {/* Contact Section */}
       <motion.section
         id="contact"
@@ -957,7 +909,7 @@ export default function Home() {
         whileInView="visible"
         viewport={{ once: true, margin: "-150px" }}
         variants={fadeInUpVariants}
-        className="w-full max-w-4xl mx-auto px-6 py-28 z-10 scroll-mt-28"
+        className="w-full max-w-4xl mx-auto px-6 pt-12 pb-28 z-10 scroll-mt-28"
       >
         <Card className="relative overflow-hidden border-zinc-800 bg-zinc-950/70 backdrop-blur-xl p-8 md:p-12">
           {/* Spotlight background */}
@@ -970,17 +922,17 @@ export default function Home() {
                 Have a project in mind or just want to say hi? Let’s build something awesome together. Fill out the contact form or connect via details below.
               </p>
               <div className="space-y-4 pt-4 text-sm text-gray-300">
-                <a href="mailto:ashendev@example.com" className="flex items-center gap-3 hover:text-emerald-400 transition-colors">
+                <a href="mailto:contact@ashendev.com" className="flex items-center gap-3 hover:text-emerald-400 transition-colors">
                   <Mail className="w-5 h-5 text-emerald-400" />
-                  <span>ashendev@example.com</span>
+                  <span>contact@ashendev.com</span>
                 </a>
-                <a href="tel:+94711234567" className="flex items-center gap-3 hover:text-emerald-400 transition-colors">
+                <a href="tel:+94763188418" className="flex items-center gap-3 hover:text-emerald-400 transition-colors">
                   <Phone className="w-5 h-5 text-cyan-400" />
-                  <span>+94 71 123 4567</span>
+                  <span>+94 76 318 8418</span>
                 </a>
                 <div className="flex items-center gap-3">
                   <MapPin className="w-5 h-5 text-sky-400" />
-                  <span>Colombo, Sri Lanka</span>
+                  <span>Ja Ela, Sri Lanka</span>
                 </div>
               </div>
             </div>
