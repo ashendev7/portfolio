@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Spotlight } from "@/components/ui/spotlight"
 import { SpotlightHover } from "@/components/ui/spotlight-hover"
 import SphereImageGrid from "@/components/ui/img-sphere"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import dynamic from "next/dynamic"
 import {
   Mail,
@@ -22,7 +22,9 @@ import {
   Globe,
   Palette,
   Terminal,
-  Zap
+  Zap,
+  X,
+  Maximize2
 } from "lucide-react"
 
 // Dynamically load heavy 3D/canvas components to optimize bundle size & load speed
@@ -190,7 +192,24 @@ export default function Home() {
   const [activeFilter, setActiveFilter] = useState("all")
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [selectedImage, setSelectedImage] = useState<{ src: string; title: string } | null>(null)
   const typewriterRef = useRef(null)
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSelectedImage(null)
+    }
+    if (selectedImage) {
+      window.addEventListener("keydown", handleKeyDown)
+      document.body.style.overflow = "hidden"
+    } else {
+      document.body.style.overflow = "unset"
+    }
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown)
+      document.body.style.overflow = "unset"
+    }
+  }, [selectedImage])
 
   const heroRef = useRef<HTMLDivElement>(null)
   const skillsRef = useRef<HTMLDivElement>(null)
@@ -325,54 +344,40 @@ export default function Home() {
   }
 
   const projects = [
+    
     {
-      title: "Travique - Premium Travel & Tours",
-      description: "Experience Sri Lanka with our premium transportation and tour services. Reliable, safe, and comfortable journeys tailored to your needs.",
-      image: "/Travique.png",
-      tags: ["Next.js", "Tailwind CSS", "Framer Motion", "TypeScript"],
-      category: "web",
-      link: "https://krish-travel.vercel.app/"
-    },
-    {
-      title: "E-Commerce Platform",
-      description: "Modern online store with seamless checkout experience.",
-      image: "https://images.unsplash.com/photo-1557821552-17105176677c?w=800&q=80",
-      tags: ["Next.js", "Stripe", "Tailwind CSS"],
+      title: "Heavenly Bubble - Bubble Tea Platform",
+      description: "A complete online ordering and shop management system for a bubble tea shop, with a customer mobile app and a powerful admin dashboard.",
+      image: "/Heavenly Bubble Technology Stack.png",
+      tags: ["Android", "Next.js", "Node.js", "MySQL"],
       category: "web",
       link: "#"
     },
     {
-      title: "Fitness Mobile App",
-      description: "Track workouts and nutrition with AI recommendations.",
-      image: "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=800&q=80",
-      tags: ["React Native", "Firebase", "TensorFlow"],
-      category: "mobile",
-      link: "#"
-    },
-    {
-      title: "Brand Identity Design",
-      description: "Complete branding package for a modern tech startup.",
-      image: "https://images.unsplash.com/photo-1626785774625-ddcddc3445e9?w=800&q=80",
-      tags: ["Figma", "Illustrator", "Photoshop"],
-      category: "design",
-      link: "#"
-    },
-    {
-      title: "Real Estate Dashboard",
-      description: "Property management system with real-time analytics.",
-      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80",
-      tags: ["React", "Node.js", "MongoDB"],
+      title: "Duggy FF Store - Gaming Marketplace",
+      description: "A modern marketplace to browse, discover, and purchase premium Free Fire accounts with secure and trusted transactions.",
+      image: "/Duggy FF Store Showcase.png",
+      tags: ["Next.js", "Node.js", "Express.js", "MySQL", "Tailwind CSS"],
       category: "web",
       link: "#"
     },
     {
-      title: "Banking API System",
-      description: "Secure microservices architecture for fintech.",
-      image: "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=800&q=80",
-      tags: ["Node.js", "PostgreSQL", "Docker"],
-      category: "backend",
+      title: "OLA Fashion Store - E-Commerce Platform",
+      description: "A modern e-commerce web application for browsing, selecting, and purchasing fashion products online with a secure and seamless shopping experience.",
+      image: "/OLA Fashion Store Showcase.png",
+      tags: ["Java EE", "Servlets", "Hibernate", "MySQL", "PayHere"],
+      category: "web",
       link: "#"
-    }
+    },
+    // {
+    //   title: "Travique - Premium Travel & Tours",
+    //   description: "Experience Sri Lanka with our premium transportation and tour services. Reliable, safe, and comfortable journeys tailored to your needs.",
+    //   image: "/Travique.png",
+    //   tags: ["Next.js", "Tailwind CSS", "Framer Motion", "TypeScript"],
+    //   category: "web",
+    //   link: "https://krish-travel.vercel.app/"
+    // },
+    
   ]
 
   const filteredProjects = activeFilter === "all"
@@ -611,136 +616,45 @@ export default function Home() {
           <div className="w-12 h-1 bg-cyan-500 rounded-full" />
         </div>
 
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-12 relative z-10">
-          {/* Unified IDE Window layout */}
-          <div className="w-full lg:w-[50%] bg-zinc-950/80 backdrop-blur-xl border border-zinc-850 rounded-2xl shadow-2xl shadow-cyan-500/5 overflow-hidden flex flex-col font-mono">
-            {/* Window title bar */}
-            <div className="flex items-center justify-between px-4 py-3 bg-zinc-900/40 border-b border-zinc-900 select-none">
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-red-500/80" />
-                <span className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                <span className="w-3 h-3 rounded-full bg-green-500/80" />
-              </div>
-              <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                <Terminal className="w-3.5 h-3.5 text-cyan-400" />
-                <span>workspace - ashen-de-silva</span>
-              </div>
-              <div className="w-12" />
-            </div>
+        <div className="max-w-4xl mx-auto space-y-8 relative z-10 text-center">
+          <h3 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight">
+            Engineering Web Products with <span className="bg-gradient-to-r from-cyan-400 to-emerald-400 bg-clip-text text-transparent">Passion & Precision</span>
+          </h3>
+          <p className="text-gray-400 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
+            I’m a full-stack developer who loves turning ideas into real, functional products. Whether I’m crafting smooth, intuitive user interfaces or architecting efficient and secure backend systems, I enjoy every part of the development process.
+          </p>
+          <p className="text-gray-400 text-base md:text-lg leading-relaxed max-w-3xl mx-auto">
+            I work with modern tools and technologies to build applications that are optimized, responsive, and scalable, ensuring a seamless experience from end to end. Coding is my genuine passion, and I push my boundaries constantly.
+          </p>
 
-            {/* Tabs */}
-            <div className="flex border-b border-zinc-900 bg-zinc-900/10 text-xs text-gray-500 select-none">
-              <div className="px-4 py-2 border-r border-zinc-900 bg-zinc-950/80 text-cyan-400 flex items-center gap-2 font-semibold">
-                <span>profile.tsx</span>
-              </div>
-              <div className="px-4 py-2 border-r border-zinc-900 flex items-center gap-2 hover:bg-zinc-900/20 hover:text-gray-300 transition-colors cursor-pointer">
-                <span>terminal.sh</span>
+          {/* Core credentials cards layout */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-8 border-t border-zinc-900 text-left">
+            <div className="p-4 rounded-xl bg-zinc-950/40 border border-zinc-900 hover:border-cyan-500/30 transition-colors duration-300 flex items-start gap-3">
+              <Code2 className="w-5 h-5 text-cyan-400 shrink-0 mt-0.5" />
+              <div>
+                <h4 className="text-sm font-bold text-white">Clean Codebase</h4>
+                <p className="text-xs text-gray-500 mt-1">Written in scalable, type-safe structures.</p>
               </div>
             </div>
-
-            {/* Editor contents split */}
-            <div className="flex flex-col sm:flex-row divide-y sm:divide-y-0 sm:divide-x divide-zinc-900/85">
-              {/* Left Panel: Avatar representation inside editor */}
-              <div className="w-full sm:w-[42%] p-6 flex flex-col justify-center items-center bg-zinc-950/20 relative group overflow-hidden">
-                {/* Cyber grid backdrop */}
-                <div className="absolute inset-0 bg-[linear-gradient(rgba(6,182,212,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(6,182,212,0.02)_1px,transparent_1px)] bg-[size:16px_16px] opacity-60" />
-
-                <div className="relative w-32 h-32 sm:w-36 sm:h-36 rounded-full overflow-hidden border border-zinc-805 bg-zinc-950/60 p-1 group-hover:border-cyan-500/50 transition-colors duration-500">
-                  <img
-                    alt="Ashen De Silva"
-                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=600&auto=format&fit=crop"
-                    className="object-cover w-full h-full rounded-full filter grayscale contrast-125 group-hover:grayscale-0 transition-all duration-500"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
-
-                <div className="mt-4 text-center z-10">
-                  <h4 className="font-bold text-sm text-white font-sans">Ashen De Silva</h4>
-                  <p className="text-[10px] text-cyan-400 font-mono mt-1 uppercase tracking-wider">Status: Active</p>
-                </div>
-              </div>
-
-              {/* Right Panel: Code block */}
-              <div className="w-full sm:w-[58%] p-6 text-xs sm:text-sm text-slate-300 font-mono space-y-4 overflow-x-auto text-left leading-relaxed">
-                <div>
-                  <span className="text-pink-400">import</span> &#123; <span className="text-cyan-400">Developer</span> &#125; <span className="text-pink-400">from</span> <span className="text-green-300">"ashen-dev"</span>
-                </div>
-
-                <div>
-                  <span className="text-pink-400">const</span> <span className="text-blue-400">AboutMe</span> = () =&gt; &#123;
-                  <div className="pl-4">
-                    <span className="text-pink-400">return</span> (
-                    <div className="pl-4">
-                      &lt;<span className="text-yellow-400">Developer</span>
-                      <div className="pl-4 font-mono">
-                        <span className="text-purple-400">name</span>=<span className="text-green-300">"Ashen"</span>
-                        <br />
-                        <span className="text-purple-400">type</span>=<span className="text-green-300">"Full-Stack"</span>
-                        <br />
-                        <span className="text-purple-400">experience</span>=<span className="text-green-300">"3+ Years"</span>
-                        <br />
-                        <span className="text-purple-400">location</span>=<span className="text-green-300">"Sri Lanka"</span>
-                        <br />
-                        <span className="text-purple-400">focus</span>=&#123;[<span className="text-green-300">"Scalable APIs"</span>, <span className="text-green-300">"3D Web"</span>]&#125;
-                      </div>
-                      /&gt;
-                    </div>
-                    )
-                  </div>
-                  &#125;
-                </div>
-
-                <div className="pt-2 border-t border-zinc-900 text-[10px] text-gray-500">
-                  <span className="text-cyan-400">$&nbsp;</span>npm run coding
-                  <br />
-                  <span className="text-emerald-400">▶ Live updates active...</span>
-                </div>
+            <div className="p-4 rounded-xl bg-zinc-950/40 border border-zinc-900 hover:border-emerald-500/30 transition-colors duration-300 flex items-start gap-3">
+              <Terminal className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+              <div>
+                <h4 className="text-sm font-bold text-white">Secure APIs</h4>
+                <p className="text-xs text-gray-500 mt-1">Robust architectures and secure endpoints.</p>
               </div>
             </div>
-          </div>
-
-          {/* Biography and Grid cards */}
-          <div className="flex-1 max-w-xl space-y-6">
-            <h3 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight">
-              Engineering Web Products with <span className="bg-gradient-to-r from-cyan-400 to-emerald-400 bg-clip-text text-transparent">Passion & Precision</span>
-            </h3>
-            <p className="text-gray-400 text-base leading-relaxed">
-              I’m a full-stack developer who loves turning ideas into real, functional products. Whether I’m crafting smooth, intuitive user interfaces or architecting efficient and secure backend systems, I enjoy every part of the development process.
-            </p>
-            <p className="text-gray-400 text-base leading-relaxed">
-              I work with modern tools and technologies to build applications that are optimized, responsive, and scalable, ensuring a seamless experience from end to end. Coding is my genuine passion, and I push my boundaries constantly.
-            </p>
-
-            {/* Core credentials cards layout */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6 border-t border-zinc-900">
-              <div className="p-4 rounded-xl bg-zinc-950/40 border border-zinc-900 hover:border-cyan-500/30 transition-colors duration-300 flex items-start gap-3">
-                <Code2 className="w-5 h-5 text-cyan-400 shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="text-sm font-bold text-white">Clean Codebase</h4>
-                  <p className="text-xs text-gray-500 mt-1">Written in scalable, type-safe structures.</p>
-                </div>
+            <div className="p-4 rounded-xl bg-zinc-950/40 border border-zinc-900 hover:border-cyan-500/30 transition-colors duration-300 flex items-start gap-3">
+              <Globe className="w-5 h-5 text-cyan-400 shrink-0 mt-0.5" />
+              <div>
+                <h4 className="text-sm font-bold text-white">Responsive Layouts</h4>
+                <p className="text-xs text-gray-500 mt-1">Optimized viewports on all screen sizes.</p>
               </div>
-              <div className="p-4 rounded-xl bg-zinc-950/40 border border-zinc-900 hover:border-emerald-500/30 transition-colors duration-300 flex items-start gap-3">
-                <Terminal className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="text-sm font-bold text-white">Secure APIs</h4>
-                  <p className="text-xs text-gray-500 mt-1">Robust architectures and secure endpoints.</p>
-                </div>
-              </div>
-              <div className="p-4 rounded-xl bg-zinc-950/40 border border-zinc-900 hover:border-cyan-500/30 transition-colors duration-300 flex items-start gap-3">
-                <Globe className="w-5 h-5 text-cyan-400 shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="text-sm font-bold text-white">Responsive Layouts</h4>
-                  <p className="text-xs text-gray-500 mt-1">Optimized viewports on all screen sizes.</p>
-                </div>
-              </div>
-              <div className="p-4 rounded-xl bg-zinc-950/40 border border-zinc-900 hover:border-emerald-500/30 transition-colors duration-300 flex items-start gap-3">
-                <Sparkles className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="text-sm font-bold text-white">3D Integrations</h4>
-                  <p className="text-xs text-gray-500 mt-1">Immersive Spline & Three.js canvas systems.</p>
-                </div>
+            </div>
+            <div className="p-4 rounded-xl bg-zinc-950/40 border border-zinc-900 hover:border-emerald-500/30 transition-colors duration-300 flex items-start gap-3">
+              <Sparkles className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+              <div>
+                <h4 className="text-sm font-bold text-white">3D Integrations</h4>
+                <p className="text-xs text-gray-500 mt-1">Immersive Spline & Three.js canvas systems.</p>
               </div>
             </div>
           </div>
@@ -899,18 +813,32 @@ export default function Home() {
               {/* Mouse hover tracking glow effect */}
               <SpotlightHover size={300} />
 
-              <div className="h-48 w-full overflow-hidden relative border-b border-zinc-900">
+              <div
+                className="p-3.5 w-full cursor-pointer group/img"
+                onClick={() => setSelectedImage({ src: proj.image, title: proj.title })}
+                title="Click to view full image"
+              >
+                <div className="aspect-[16/10] w-full overflow-hidden relative rounded-xl border border-zinc-800/60 bg-zinc-900/50">
                   <img
                     src={proj.image}
                     alt={proj.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                    className="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-500 ease-out"
                     loading="lazy"
                     decoding="async"
                   />
-                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/40 via-transparent to-transparent pointer-events-none" />
+
+                  {/* Hover overlay hint */}
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
+                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/80 border border-white/20 shadow-xl text-xs font-semibold text-white tracking-wide transform translate-y-2 group-hover/img:translate-y-0 transition-transform duration-300 backdrop-blur-sm">
+                      <Maximize2 className="w-3.5 h-3.5 text-cyan-400" />
+                      <span>View Image</span>
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              <CardHeader className="flex-grow p-6">
+              <CardHeader className="flex-grow px-6 pb-6 pt-1">
                 <div className="flex flex-wrap gap-2 mb-3">
                   {proj.tags.map((tag, tagIdx) => (
                     <span key={tagIdx} className="text-[10px] bg-zinc-900 text-gray-300 border border-zinc-800 px-2 py-0.5 rounded-md font-mono">
@@ -1043,6 +971,56 @@ export default function Home() {
       <footer className="mt-auto border-t border-zinc-900 bg-black/25 py-8 text-center text-xs text-gray-500 z-10">
         <p>© 2026 Ashen De Silva. All rights reserved.</p>
       </footer>
+
+      {/* High-Resolution Image Lightbox Modal */}
+      <AnimatePresence>
+        {selectedImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={() => setSelectedImage(null)}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4 sm:p-6 md:p-10 cursor-zoom-out"
+          >
+            {/* Modal Dialog */}
+            <motion.div
+              initial={{ scale: 0.92, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.92, opacity: 0 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative max-w-6xl w-full max-h-[92vh] flex flex-col items-center cursor-default bg-zinc-950/95 border border-zinc-800 rounded-2xl overflow-hidden shadow-2xl shadow-cyan-500/10"
+            >
+              {/* Header bar */}
+              <div className="w-full px-5 py-3.5 flex items-center justify-between border-b border-zinc-800 bg-zinc-900/60 select-none">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse" />
+                  <span className="text-sm font-semibold text-white tracking-wide truncate max-w-xs sm:max-w-md md:max-w-xl">
+                    {selectedImage.title}
+                  </span>
+                </div>
+                <button
+                  onClick={() => setSelectedImage(null)}
+                  className="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-zinc-800 transition-colors focus:outline-none"
+                  aria-label="Close image preview"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Image Preview Container with high-res full display */}
+              <div className="w-full p-2 sm:p-4 flex items-center justify-center overflow-auto max-h-[calc(92vh-60px)] bg-black/40">
+                <img
+                  src={selectedImage.src}
+                  alt={selectedImage.title}
+                  className="max-w-full max-h-[calc(92vh-90px)] w-auto h-auto object-contain rounded-xl shadow-2xl"
+                />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
